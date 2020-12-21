@@ -14,7 +14,7 @@ case "$1" in
   scheduler)
     echo "Attempting upgradedb command.."
     # In upgradedb default connections are not populated. Use "airflow initdb" instead for default connections.
-    airflow upgradedb
+    airflow db upgrade
     if [[ "$AIRFLOW__CORE__EXECUTOR" = "LocalExecutor" ]] || [[ "$AIRFLOW__CORE__EXECUTOR" = "SequentialExecutor" ]];
     then
       # Running webserver in scheduler instead of reverse to maintain consistency in Makefile.

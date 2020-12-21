@@ -32,21 +32,21 @@ services:
 #        networks:
 #            - proxy
 #            - default
-#        environment:
-#            # Web Server Config
-#            - AIRFLOW__WEBSERVER__DAG_DEFAULT_VIEW=graph
-#            - AIRFLOW__WEBSERVER__HIDE_PAUSED_DAGS_BY_DEFAULT=true
-#            - AIRFLOW__WEBSERVER__RBAC=true
-#
-#            # Web Server Performance tweaks
-#            # 2 * NUM_CPU_CORES + 1
-#            - AIRFLOW__WEBSERVER__WORKERS=5
-#            # Restart workers every 30min instead of 30seconds
-#            - AIRFLOW__WEBSERVER__WORKER_REFRESH_INTERVAL=1800
-#        labels:
-#            - "traefik.enable=true"
-#            - "traefik.http.routers.airflow.rule=Host(`af.example.com`)"
-#            - "traefik.http.routers.airflow.middlewares=admin-auth@file"
+        environment:
+            # Web Server Config
+            - AIRFLOW__WEBSERVER__DAG_DEFAULT_VIEW=graph
+            - AIRFLOW__WEBSERVER__HIDE_PAUSED_DAGS_BY_DEFAULT=true
+            - AIRFLOW__WEBSERVER__RBAC=true
+
+            # Web Server Performance tweaks
+            # 2 * NUM_CPU_CORES + 1
+            - AIRFLOW__WEBSERVER__WORKERS=5
+            # Restart workers every 30min instead of 30seconds
+            - AIRFLOW__WEBSERVER__WORKER_REFRESH_INTERVAL=1800
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.airflow.rule=Host(`af.example.com`)"
+            - "traefik.http.routers.airflow.middlewares=admin-auth@file"
         healthcheck:
             test: ["CMD-SHELL", "[ -f /opt/airflow/airflow-webserver.pid ]"]
             interval: 30s
@@ -63,7 +63,7 @@ services:
             - redis
         ports:
             - 5555:5555
-        command: flower
+        command: celery flower
 
     scheduler:
         extends:
@@ -74,10 +74,10 @@ services:
         depends_on:
             - postgres
             - redis
-#        environment:
-#            # Scheduler Performance Tweaks
-#            # Reduce how often DAGs are reloaded to dramatically reduce CPU use
-#            - AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL=${AF_MIN_FILE_PROCESS_INTERVAL-60}
+        environment:
+            # Scheduler Performance Tweaks
+            # Reduce how often DAGs are reloaded to dramatically reduce CPU use
+            - AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL=60 #${AF_MIN_FILE_PROCESS_INTERVAL-60}
 #            - AIRFLOW__SCHEDULER__MAX_THREADS=${AF_THREADS-1}
 
     worker:
@@ -85,7 +85,7 @@ services:
             file: docker-compose.airflow.celery.yml
             service: airflow
         container_name: af_worker
-        command: worker
+        command: celery worker
         depends_on:
             - postgres
             - redis

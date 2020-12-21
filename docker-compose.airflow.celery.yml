@@ -4,6 +4,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+            args:
+                - ADDITIONAL_PYTHON_DEPS=oauth2client==4.1.2 redis statsmodels user-agents==2 apache-airflow-providers-google google-ads==7.0.0
         restart: always
         environment:
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
@@ -16,6 +18,6 @@ services:
             - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres:5432/airflow
         volumes:
             - ./dags:/opt/airflow/dags:z
-#            - ./plugins:/opt/airflow/plugins:z
+            - ./plugins:/opt/airflow/plugins:z
 #            - ./volumes/airflow_data_dump:/opt/airflow/data_dump:z
 #            - ./volumes/airflow_logs:/opt/airflow/logs:z
