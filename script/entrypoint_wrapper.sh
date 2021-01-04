@@ -5,6 +5,9 @@ if [[ -e "/requirements.txt" ]]; then
     $(command -v pip) install --user -r /requirements.txt
 fi
 
+# clear old pid files in case of unclean exit
+rm /opt/airflow/*.pid
+
 case "$1" in
   webserver|worker|flower)
     # Give the scheduler time to run upgradedb.
