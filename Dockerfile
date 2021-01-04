@@ -38,5 +38,5 @@ RUN chown -R airflow: ${AIRFLOW_HOME}
 EXPOSE 5555 8793
 
 USER airflow
-RUN pip install --use-deprecated legacy-resolver --user ${ADDITIONAL_PYTHON_DEPS} --
+RUN pip install --user ${ADDITIONAL_PYTHON_DEPS} --
 ENTRYPOINT ["/entrypoint_wrapper.sh"]
