@@ -3,7 +3,7 @@
 # DESCRIPTION: Basic Airflow container
 # BUILD: docker build --rm -t swapniel99/docker-airflow .
 # SOURCE: https://github.com/swapniel99/docker-airflow
-FROM apache/airflow:1.10.14-python3.8
+FROM apache/airflow:2.0.0
 ARG ADDITIONAL_PYTHON_DEPS
 ENV ADDITIONAL_PYTHON_DEPS=${ADDITIONAL_PYTHON_DEPS}
 
